@@ -1,6 +1,6 @@
 (ns cabinet.elem
   (:use clojure.contrib.condition)
-  (:refer-clojure :exclude (get delete)))
+  (:refer-clojure :exclude (list get delete)))
 
 (def elems (atom {}))
 
