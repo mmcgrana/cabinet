@@ -9,14 +9,14 @@
 
 (defn get [id]
   (or (@elems id)
-      (raise :message "elem not found"
-             :status 404)))
+      (raise :type :not-found
+             :message (format "elem '%s' not found" id))))
 
 (defn put [id attrs]
   (if (empty? attrs)
-    (raise :message "attrs are empty"
-           :status 400)
-    (let [new-attrs (merge (get id) attrs)]
+    (raise :type :invalid
+           :message "attrs are empty")
+    (let [new-attrs (merge (@elems id) attrs)]
       (swap! elems assoc id new-attrs)
       new-attrs)))
 

@@ -12,9 +12,9 @@
    :headers {"Content-Type" "application/json"}
    :body (json/generate-string data)})
 
-(def error-info
-  {:attributes-invalid [400 "attributes invalid"]
-   :elem-not-found     [404 "elem not found"]})
+(def error-codes
+  {:invalid 400
+   :not-found 404})
 
 (defn wrap-error-handling [handler]
   (fn [req]
@@ -24,8 +24,8 @@
       (catch JsonParseException e
         (json-response {"error" "malformed json"} 400))
       (catch Condition e
-        (let [{:keys [message status]} (meta e)]
-          (json-response {"error" message} status))))))
+        (let [{:keys [type message]} (meta e)]
+          (json-response {"error" message} (error-codes type)))))))
 
 (defn wrap-failsafe [handler]
   (fn [req]
