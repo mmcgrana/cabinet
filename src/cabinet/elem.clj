@@ -4,7 +4,7 @@
 
 (def elems (atom {}))
 
-(defn all []
+(defn list []
   @elems)
 
 (defn get [id]
