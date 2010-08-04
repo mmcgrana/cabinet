@@ -1,6 +1,5 @@
 (ns cabinet.web
   (:use compojure.core)
-  (:use ring.middleware.reload)
   (:use ring.middleware.json-params)
   (:require [clj-json.core :as json])
   (:require [cabinet.elem :as elem])
@@ -27,40 +26,20 @@
         (let [{:keys [type message]} (meta e)]
           (json-response {"error" message} (error-codes type)))))))
 
-(defn wrap-failsafe [handler]
-  (fn [req]
-    (try
-      (handler req)
-      (catch Exception e
-        (json-response {"error" "internal server error"} 500)))))
-
-; (defroutes handler
-;   (GET "/elems" []
-;     (json-response (elem/list)))
-; 
-;   (GET "/elems/:id" [id]
-;     (json-response (elem/get id)))
-; 
-;   (PUT "/elems/:id" [id attrs]
-;     (json-response (elem/put id attrs)))
-; 
-;   (DELETE "/elems/:id" [id]
-;     (json-response (elem/delete id))))
-;
-; (def app
-;   (-> #'handler
-;     (wrap-json-params)
-;     (wrap-error-handling)
-;     (wrap-failsafe)
-;     (wrap-reload ['cabinet.web 'cabinet.elem])))
-
 (defroutes handler
-  (GET "/" []
-    (json-response {"hello" "world"}))
+  (GET "/elems" []
+    (json-response (elem/list)))
 
-  (PUT "/" [name]
-    (json-response {"hello" name})))
+  (GET "/elems/:id" [id]
+    (json-response (elem/get id)))
+
+  (PUT "/elems/:id" [id attrs]
+    (json-response (elem/put id attrs)))
+
+  (DELETE "/elems/:id" [id]
+    (json-response (elem/delete id))))
 
 (def app
-  (-> #'handler
-    wrap-json-params))
+  (-> handler
+    wrap-json-params
+    wrap-error-handling))
