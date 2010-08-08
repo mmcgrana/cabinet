@@ -1,4 +1,4 @@
-(defproject cabinent "0.0.1"
+(defproject cabinet "0.0.1"
   :description "REST datastore interface."
   :dependencies
     [[org.clojure/clojure "1.2.0-RC1"]
