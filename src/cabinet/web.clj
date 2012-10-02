@@ -1,10 +1,12 @@
 (ns cabinet.web
   (:use compojure.core)
+  (:use ring.adapter.jetty)
   (:use ring.middleware.json-params)
   (:require [clj-json.core :as json])
   (:require [cabinet.elem :as elem])
   (:import org.codehaus.jackson.JsonParseException)
-  (:import clojure.contrib.condition.Condition))
+  (:import clojure.contrib.condition.Condition)
+  (:gen-class main true))
 
 (defn json-response [data & [status]]
   {:status (or status 200)
@@ -43,3 +45,6 @@
   (-> handler
     wrap-json-params
     wrap-error-handling))
+
+(defn -main []
+  (run-jetty #'app {:port 8080}))
